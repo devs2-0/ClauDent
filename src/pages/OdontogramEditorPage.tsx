@@ -154,7 +154,7 @@ const OdontogramEditorPage: React.FC = () => {
         notas: localNotas,
       });
       toast.success("Odontograma actualizado");
-      navigate(`/pacientes/${patientId}`);
+      setSelectedTooth(null);
     } catch (error) {
       console.error(error);
       toast.error("Error al guardar los cambios");
