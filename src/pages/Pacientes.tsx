@@ -125,6 +125,12 @@ const Pacientes: React.FC = () => {
 
     try {
       if (editingPatient) {
+        const confirmUpdate = window.confirm('¿Confirmas que deseas actualizar los datos del paciente?');
+        if (!confirmUpdate) {
+          setIsFormLoading(false);
+          return;
+        }
+
         const { ...updates } = formData;
         await updatePatient(editingPatient, updates);
         toast.success('Paciente actualizado correctamente');
@@ -217,7 +223,7 @@ const Pacientes: React.FC = () => {
               className="pl-10"
             />
           </div>
-          <Select value={filterStatus} onValueChange={(v) => setFilterStatus(v as any)}>
+          <Select value={filterStatus} onValueChange={(value: 'all' | 'activo' | 'inactivo') => setFilterStatus(value)}>
             <SelectTrigger className="w-full sm:w-48">
               <Filter className="h-4 w-4 mr-2" />
               <SelectValue />

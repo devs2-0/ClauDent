@@ -83,7 +83,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   };
 
   const handleLogout = () => {
-    logout(); 
+    const shouldLogout = window.confirm('¿Seguro que deseas cerrar sesión?');
+    if (!shouldLogout) return;
+
+    logout();
     navigate('/login');
   };
 

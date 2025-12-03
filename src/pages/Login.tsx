@@ -1,10 +1,11 @@
 // RF01: Login page (CON RECUPERACIÓN INTEGRADA)
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Stethoscope, Eye, EyeOff } from 'lucide-react'; 
+import { Stethoscope, Eye, EyeOff } from 'lucide-react';
 import { motion } from 'framer-motion';
 // Importamos sendPasswordResetEmail
 import { signInWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth';
+import { FirebaseError } from 'firebase/app';
 import { auth } from '@/lib/firebase';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -31,16 +32,20 @@ const Login: React.FC = () => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       navigate('/dashboard');
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error(error);
       let errorMessage = 'Error al iniciar sesión';
-      if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
-        errorMessage = 'Email o contraseña incorrectos';
-      } else if (error.code === 'auth/invalid-email') {
-        errorMessage = 'El formato del email es incorrecto';
-      } else if (error.code === 'auth/too-many-requests') {
-        errorMessage = 'Demasiados intentos fallidos. Intenta más tarde.';
+
+      if (error instanceof FirebaseError) {
+        if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
+          errorMessage = 'Email o contraseña incorrectos';
+        } else if (error.code === 'auth/invalid-email') {
+          errorMessage = 'El formato del email es incorrecto';
+        } else if (error.code === 'auth/too-many-requests') {
+          errorMessage = 'Demasiados intentos fallidos. Intenta más tarde.';
+        }
       }
+
       toast.error(errorMessage);
     } finally {
       setIsLoading(false);
@@ -60,15 +65,19 @@ const Login: React.FC = () => {
       await sendPasswordResetEmail(auth, email);
       toast.dismiss(loadingToast);
       toast.success('¡Listo! Revisa tu correo para restablecer tu contraseña.');
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error(error);
       toast.dismiss(loadingToast);
       let errorMessage = 'No se pudo enviar el correo.';
-      if (error.code === 'auth/user-not-found') {
-        errorMessage = 'No existe una cuenta con este correo.';
-      } else if (error.code === 'auth/invalid-email') {
-        errorMessage = 'El formato del correo es incorrecto.';
+
+      if (error instanceof FirebaseError) {
+        if (error.code === 'auth/user-not-found') {
+          errorMessage = 'No existe una cuenta con este correo.';
+        } else if (error.code === 'auth/invalid-email') {
+          errorMessage = 'El formato del correo es incorrecto.';
+        }
       }
+
       toast.error(errorMessage);
     }
   };
