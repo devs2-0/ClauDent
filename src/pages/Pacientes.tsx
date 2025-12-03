@@ -125,6 +125,12 @@ const Pacientes: React.FC = () => {
 
     try {
       if (editingPatient) {
+        const confirmUpdate = window.confirm('¿Confirmas que deseas actualizar los datos del paciente?');
+        if (!confirmUpdate) {
+          setIsFormLoading(false);
+          return;
+        }
+
         const { ...updates } = formData;
         await updatePatient(editingPatient, updates);
         toast.success('Paciente actualizado correctamente');
