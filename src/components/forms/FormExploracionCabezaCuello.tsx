@@ -14,8 +14,8 @@ const FormExploracionCabezaCuello: React.FC<Props> = ({ formData, setFormData })
   const handleCheckboxChange = (id: keyof IExploracionCabezaCuello, checked: boolean) => {
     setFormData(prev => ({ ...prev, [id]: checked }));
   };
-  const handleSelectChange = (id: keyof IExploracionCabezaCuello, value: string) => {
-    setFormData(prev => ({ ...prev, [id]: value as any }));
+  const handleSelectChange = <K extends keyof IExploracionCabezaCuello>(id: K, value: IExploracionCabezaCuello[K]) => {
+    setFormData(prev => ({ ...prev, [id]: value }));
   };
 
   return (

@@ -81,7 +81,8 @@ export const generateQuotationPDF = (
   });
 
   // 'y' es actualizada por autoTable, así que añadimos espacio
-  y = (doc as any).lastAutoTable.finalY + 10;
+  const lastAutoTable = (doc as jsPDF & { lastAutoTable?: { finalY: number } }).lastAutoTable;
+  y = (lastAutoTable?.finalY ?? y) + 10;
 
   // --- 5. Totales (Subtotal, Descuento, Total) ---
   const descuentoAmount = (subtotal * quotation.descuento) / 100;
