@@ -304,7 +304,7 @@ const ServiciosIndividuales: React.FC = () => {
                   <Label htmlFor="estado">Estado</Label>
                   <Select
                     value={formData.estado}
-                    onValueChange={(v) => setFormData({ ...formData, estado: v as any })}
+                    onValueChange={(value: 'activo' | 'inactivo') => setFormData({ ...formData, estado: value })}
                   >
                     <SelectTrigger id="estado">
                       <SelectValue />
