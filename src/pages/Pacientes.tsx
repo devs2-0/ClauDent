@@ -217,7 +217,7 @@ const Pacientes: React.FC = () => {
               className="pl-10"
             />
           </div>
-          <Select value={filterStatus} onValueChange={(v) => setFilterStatus(v as any)}>
+          <Select value={filterStatus} onValueChange={(value: 'all' | 'activo' | 'inactivo') => setFilterStatus(value)}>
             <SelectTrigger className="w-full sm:w-48">
               <Filter className="h-4 w-4 mr-2" />
               <SelectValue />

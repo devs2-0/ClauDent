@@ -21,6 +21,13 @@ interface PatientQuotationsProps {
   patientId: string;
 }
 
+type QuotationFormState = {
+  fecha: string;
+  estado: Quotation['estado'];
+  notas: string;
+  descuento: string | number;
+};
+
 const PatientQuotations: React.FC<PatientQuotationsProps> = ({ patientId }) => {
   const { quotations, quotationsLoading, updateQuotation, services, patients } = useApp();
   const [patientQuotations, setPatientQuotations] = useState<Quotation[]>([]);
@@ -29,11 +36,11 @@ const PatientQuotations: React.FC<PatientQuotationsProps> = ({ patientId }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
-  const [formData, setFormData] = useState({
-     fecha: '',
-     estado: '',
-     notas: '',
-     descuento: '' as string | number
+  const [formData, setFormData] = useState<QuotationFormState>({
+    fecha: '',
+    estado: 'borrador',
+    notas: '',
+    descuento: '',
   });
 
   useEffect(() => {
@@ -61,10 +68,10 @@ const PatientQuotations: React.FC<PatientQuotationsProps> = ({ patientId }) => {
       setIsSaving(true);
       try {
           await updateQuotation(editingQuotation.id, {
-              fecha: formData.fecha,
-              estado: formData.estado as any,
-              notas: formData.notas,
-              descuento: Number(formData.descuento)
+            fecha: formData.fecha,
+            estado: formData.estado,
+            notas: formData.notas,
+            descuento: Number(formData.descuento)
           });
           toast.success("Cotización actualizada");
           setIsDialogOpen(false);

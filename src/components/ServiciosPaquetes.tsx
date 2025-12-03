@@ -139,7 +139,7 @@ const ServiciosPaquetes: React.FC = () => {
       setFormData(prev => {
           const existingIndex = prev.serviciosIncluidos.findIndex(s => s.id === servicio.id);
           
-          let nuevosServicios = [...prev.serviciosIncluidos];
+          const nuevosServicios = [...prev.serviciosIncluidos];
           
           if (existingIndex >= 0) {
               // Si ya existe, incrementamos la cantidad
@@ -404,7 +404,7 @@ const ServiciosPaquetes: React.FC = () => {
                   <Label htmlFor="paquete-estado">Estado</Label>
                   <Select
                     value={formData.estado}
-                    onValueChange={(v) => setFormData({ ...formData, estado: v as any })}
+                    onValueChange={(value: 'activo' | 'inactivo') => setFormData({ ...formData, estado: value })}
                   >
                     <SelectTrigger id="paquete-estado">
                       <SelectValue />

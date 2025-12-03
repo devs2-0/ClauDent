@@ -4,6 +4,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Stethoscope, Eye, EyeOff } from 'lucide-react'; // Importamos iconos
 import { motion } from 'framer-motion';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { FirebaseError } from 'firebase/app';
 import { auth } from '@/lib/firebase';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -42,15 +43,17 @@ const Register: React.FC = () => {
       toast.success('¡Cuenta creada! Bienvenido.');
       navigate('/dashboard');
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error(error);
       let errorMessage = 'Error al crear la cuenta';
-      if (error.code === 'auth/email-already-in-use') {
-        errorMessage = 'Este email ya está en uso';
-      } else if (error.code === 'auth/weak-password') {
-        errorMessage = 'La contraseña debe tener al menos 6 caracteres';
-      } else if (error.code === 'auth/invalid-email') {
-        errorMessage = 'El formato del email es incorrecto';
+      if (error instanceof FirebaseError) {
+        if (error.code === 'auth/email-already-in-use') {
+          errorMessage = 'Este email ya está en uso';
+        } else if (error.code === 'auth/weak-password') {
+          errorMessage = 'La contraseña debe tener al menos 6 caracteres';
+        } else if (error.code === 'auth/invalid-email') {
+          errorMessage = 'El formato del email es incorrecto';
+        }
       }
       toast.error(errorMessage);
     } finally {

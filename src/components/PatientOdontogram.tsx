@@ -101,7 +101,7 @@ const PatientOdontogram: React.FC<PatientOdontogramProps> = ({ patientId }) => {
           <div className="space-y-4 py-4">
             <div className="space-y-2">
               <Label htmlFor="tipo-odontograma">Tipo de Odontograma</Label>
-              <Select value={selectedType} onValueChange={(v) => setSelectedType(v as any)}>
+              <Select value={selectedType} onValueChange={(value: 'adulto' | 'niño') => setSelectedType(value)}>
                 <SelectTrigger id="tipo-odontograma">
                   <SelectValue />
                 </SelectTrigger>

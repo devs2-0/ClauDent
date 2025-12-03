@@ -394,7 +394,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const addHistoryEntry = async (patientId: string, entry: Omit<HistoryEntry, 'id'>) => { await addDoc(collection(db, 'pacientes', patientId, 'historial'), { ...entry, fecha: new Date(entry.fecha + "T00:00:00") }); };
   const updateHistoryEntry = async (patientId: string, entryId: string, updates: Partial<HistoryEntry>) => {
     const entryRef = doc(db, 'pacientes', patientId, 'historial', entryId);
-    const firestoreUpdates: any = { ...updates };
+    const firestoreUpdates: Partial<HistoryEntry> & { fecha?: Date } = { ...updates };
     if (updates.fecha) firestoreUpdates.fecha = new Date(updates.fecha + "T00:00:00");
     await updateDoc(entryRef, firestoreUpdates);
   };
@@ -409,7 +409,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   // ¡CORREGIDO! Update quotation robusto
   const updateQuotation = async (id: string, updates: Partial<Quotation>) => {
     const quotationRef = doc(db, 'cotizaciones', id);
-    const firestoreUpdates: any = { ...updates };
+    const firestoreUpdates: Partial<Quotation> & { fecha?: Date } = { ...updates };
     // Manejo seguro de la fecha
     if (updates.fecha) {
         // Asegurarse que sea string "YYYY-MM-DD" antes de convertir
@@ -424,7 +424,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const addPaquete = async (paquete: Omit<Paquete, 'id'>) => { await addDoc(collection(db, 'paquetes'), { ...paquete, fechaInicio: new Date(paquete.fechaInicio + "T00:00:00"), fechaFin: new Date(paquete.fechaFin + "T00:00:00"), fechaCreacion: serverTimestamp() }); };
   const updatePaquete = async (id: string, updates: Partial<Paquete>) => {
     const paqueteRef = doc(db, 'paquetes', id);
-    const firestoreUpdates: any = { ...updates };
+    const firestoreUpdates: Partial<Paquete> & { fechaInicio?: Date; fechaFin?: Date } = { ...updates };
     if (updates.fechaInicio) firestoreUpdates.fechaInicio = new Date(updates.fechaInicio + "T00:00:00");
     if (updates.fechaFin) firestoreUpdates.fechaFin = new Date(updates.fechaFin + "T00:00:00");
     await updateDoc(paqueteRef, firestoreUpdates);
