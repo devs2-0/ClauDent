@@ -1,7 +1,7 @@
 // RF09: Quotations (EDITABLE Y SIN ERRORES)
 import React, { useState, useMemo } from 'react';
 import { Plus, Download, Eye, FileText, Book, ClipboardPlus, Search, Printer, Check, ChevronsUpDown, X, Trash2 } from 'lucide-react';
-import { useApp, QuotationItem, Quotation, Service } from '@/state/AppContext';
+import { useApp, QuotationItem, Quotation, Service, Patient } from '@/state/AppContext';
 import { formatCurrency, formatDate } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -63,7 +63,7 @@ const Cotizaciones: React.FC = () => {
   const [openServiceIndex, setOpenServiceIndex] = useState<number | null>(null);
   const [serviceSearch, setServiceSearch] = useState('');
   const [recentServices, setRecentServices] = useState<Service[]>([]);
-  const [recentPatients, setRecentPatients] = useState<any[]>([]); 
+  const [recentPatients, setRecentPatients] = useState<Patient[]>([]);
   const [patientSearch, setPatientSearch] = useState('');
 
   const [mainSearch, setMainSearch] = useState('');
@@ -101,7 +101,7 @@ const Cotizaciones: React.FC = () => {
         .slice(0, 20);
   }, [services, serviceSearch, recentServices]);
 
-  const handleSelectPatient = (patient: any) => {
+  const handleSelectPatient = (patient: Patient) => {
       setFormData({ ...formData, pacienteId: patient.id });
       setRecentPatients(prev => {
           const filtered = prev.filter(p => p.id !== patient.id);
@@ -197,7 +197,7 @@ const Cotizaciones: React.FC = () => {
     });
   };
 
-  const handleItemChange = (index: number, field: keyof FormQuotationItem, value: any) => {
+  const handleItemChange = <K extends keyof FormQuotationItem>(index: number, field: K, value: FormQuotationItem[K]) => {
     const newItems = [...formData.items];
     newItems[index] = { ...newItems[index], [field]: value };
     setFormData({ ...formData, items: newItems });
@@ -662,7 +662,7 @@ const Cotizaciones: React.FC = () => {
                     </div>
                     <div className="space-y-2">
                     <Label htmlFor="estado">Estado</Label>
-                    <Select value={formData.estado} onValueChange={(v) => setFormData({ ...formData, estado: v as any })}>
+                    <Select value={formData.estado} onValueChange={(value: Quotation['estado']) => setFormData({ ...formData, estado: value })}>
                         <SelectTrigger id="estado">
                         <SelectValue />
                         </SelectTrigger>

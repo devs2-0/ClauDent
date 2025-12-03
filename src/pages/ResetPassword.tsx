@@ -4,6 +4,7 @@ import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { Stethoscope, Eye, EyeOff, CheckCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { verifyPasswordResetCode, confirmPasswordReset } from 'firebase/auth';
+import { FirebaseError } from 'firebase/app';
 import { auth } from '@/lib/firebase';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -70,9 +71,17 @@ function useQuery() {
         toast.success('Contraseña actualizada correctamente');
         // Redirigir al login después de 3 segundos
         setTimeout(() => navigate('/login'), 3000);
-        } catch (error: any) {
+        } catch (error: unknown) {
         console.error(error);
-        toast.error('Error al restablecer la contraseña. Intenta de nuevo.');
+        let errorMessage = 'Error al restablecer la contraseña. Intenta de nuevo.';
+
+        if (error instanceof FirebaseError) {
+            if (error.code === 'auth/expired-action-code' || error.code === 'auth/invalid-action-code') {
+            errorMessage = 'El enlace no es válido o ya se usó.';
+            }
+        }
+
+        toast.error(errorMessage);
         } finally {
         setIsSaving(false);
         }
