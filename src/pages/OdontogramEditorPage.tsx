@@ -292,11 +292,11 @@ const OdontogramEditorPage: React.FC = () => {
                     <User className="h-5 w-5 text-primary" />
                     {patient ? `${patient.nombres} ${patient.apellidos}` : 'Paciente Desconocido'}
                 </h1>
-                <p className="text-sm text-muted-foreground flex items-center gap-2">
+                <div className="text-sm text-muted-foreground flex items-center gap-2">
                     {patient && <span>{calculateAge(patient.fechaNacimiento)} años •</span>}
                     <Badge variant="outline" className="capitalize">{odontogram?.tipo}</Badge>
                     <span>• {formatDate(odontogram?.fecha || '')}</span>
-                </p>
+                </div>
             </div>
         </div>
         <Button onClick={handleSave} disabled={isSaving} className="w-full sm:w-auto">
