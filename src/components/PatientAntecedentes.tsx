@@ -18,7 +18,9 @@ import { Edit } from 'lucide-react';
 import InitialHistoryModal from '@/components/InitialHistoryModal';
 
 // ¡CORREGIDO! Componente DataViewer
-const DataViewer: React.FC<{ data: Record<string, any>, title: string }> = ({ data, title }) => {
+type HistorySection = Record<string, string | number | boolean | null | undefined>;
+
+const DataViewer: React.FC<{ data: HistorySection; title: string }> = ({ data, title }) => {
   // ¡CORREGIDO! El filtro ahora solo oculta 'null' o 'undefined',
   // pero SÍ permite 'false' (para los checkbox) y '""' (para texto vacío).
   const entries = Object.entries(data).filter(([_, value]) => value !== null && value !== undefined);
@@ -32,7 +34,7 @@ const DataViewer: React.FC<{ data: Record<string, any>, title: string }> = ({ da
   }
 
   // ¡NUEVO! Función para mostrar el valor correctamente
-  const getDisplayValue = (value: any): string => {
+  const getDisplayValue = (value: string | number | boolean | null | undefined): string => {
     if (typeof value === 'boolean') {
       return value ? 'Sí' : 'No';
     }
@@ -73,7 +75,7 @@ const PatientAntecedentes: React.FC = () => {
         const historyRef = collection(db, 'pacientes', patientId, 'historia_clinica');
         const querySnapshot = await getDocs(historyRef);
         
-        let fullData: IHistoriaClinicaCompleta = JSON.parse(JSON.stringify(initialState)); // Copia profunda
+    const fullData: IHistoriaClinicaCompleta = JSON.parse(JSON.stringify(initialState)); // Copia profunda
         
         if (querySnapshot.empty) {
           console.log("No hay historia clínica inicial para este paciente.");
