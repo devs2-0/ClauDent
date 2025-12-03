@@ -59,8 +59,9 @@ const Pacientes: React.FC = () => {
   const [filterStatus, setFilterStatus] = useState<'all' | 'activo' | 'inactivo'>('all');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingPatient, setEditingPatient] = useState<string | null>(null);
-  const [isFormLoading, setIsFormLoading] = useState(false); 
+  const [isFormLoading, setIsFormLoading] = useState(false);
   const [crearHistorial, setCrearHistorial] = useState(false);
+  const [showUpdateConfirm, setShowUpdateConfirm] = useState(false);
   
   const [historyModalState, setHistoryModalState] = useState<{isOpen: boolean; patientId: string | null}>({
     isOpen: false,
@@ -115,33 +116,41 @@ const Pacientes: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsFormLoading(true);
-    
+
     if (!formData.nombres || !formData.apellidos || !formData.fechaNacimiento) {
       toast.error("Nombres, Apellidos y Fecha de Nacimiento son obligatorios.");
-      setIsFormLoading(false);
       return;
     }
 
+    if (editingPatient) {
+      setShowUpdateConfirm(true);
+      return;
+    }
+
+    setIsFormLoading(true);
     try {
-      if (editingPatient) {
-        const confirmUpdate = window.confirm('¿Confirmas que deseas actualizar los datos del paciente?');
-        if (!confirmUpdate) {
-          setIsFormLoading(false);
-          return;
-        }
+      const newPatientId = await addPatient(formData);
+      toast.success('Paciente creado correctamente');
 
-        const { ...updates } = formData;
-        await updatePatient(editingPatient, updates);
-        toast.success('Paciente actualizado correctamente');
-      } else {
-        const newPatientId = await addPatient(formData);
-        toast.success('Paciente creado correctamente');
-
-        if (crearHistorial) {
-          setHistoryModalState({ isOpen: true, patientId: newPatientId });
-        }
+      if (crearHistorial) {
+        setHistoryModalState({ isOpen: true, patientId: newPatientId });
       }
+      setIsDialogOpen(false);
+    } catch (error) {
+      console.error(error);
+      toast.error('Error al guardar el paciente');
+    } finally {
+      setIsFormLoading(false);
+    }
+  };
+
+  const confirmUpdate = async () => {
+    if (!editingPatient) return;
+    setIsFormLoading(true);
+    try {
+      const updates = { ...formData };
+      await updatePatient(editingPatient, updates);
+      toast.success('Paciente actualizado correctamente');
       setIsDialogOpen(false);
       setEditingPatient(null);
     } catch (error) {
@@ -149,6 +158,7 @@ const Pacientes: React.FC = () => {
       toast.error('Error al guardar el paciente');
     } finally {
       setIsFormLoading(false);
+      setShowUpdateConfirm(false);
     }
   };
 
@@ -475,8 +485,27 @@ const Pacientes: React.FC = () => {
           </form>
         </DialogContent>
       </Dialog>
-      
-      <InitialHistoryModal 
+
+      <Dialog open={showUpdateConfirm} onOpenChange={setShowUpdateConfirm}>
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Confirmar actualización</DialogTitle>
+            <DialogDescription>
+              Estás a punto de modificar datos sensibles del paciente. Revisa la información antes de continuar.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="gap-2 sm:gap-0">
+            <Button variant="outline" onClick={() => setShowUpdateConfirm(false)}>
+              Cancelar
+            </Button>
+            <Button onClick={confirmUpdate} disabled={isFormLoading}>
+              Confirmar cambios
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <InitialHistoryModal
         isOpen={historyModalState.isOpen}
         patientId={historyModalState.patientId}
         onClose={() => setHistoryModalState({ isOpen: false, patientId: null })}

@@ -17,6 +17,14 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useApp, Patient } from '@/state/AppContext';
 import { Button } from '@/components/ui/button';
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import {
   Command,
   CommandEmpty,
   CommandGroup,
@@ -45,7 +53,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   
   const location = useLocation();
   const navigate = useNavigate();
-  const { currentUser, logout, patients } = useApp(); 
+  const { currentUser, logout, patients } = useApp();
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   const [recentSearches, setRecentSearches] = useState<Patient[]>([]);
 
@@ -82,12 +91,12 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     navigate(`/pacientes/${patient.id}`);
   };
 
-  const handleLogout = () => {
-    const shouldLogout = window.confirm('¿Seguro que deseas cerrar sesión?');
-    if (!shouldLogout) return;
+  const handleLogout = () => setShowLogoutConfirm(true);
 
+  const confirmLogout = () => {
     logout();
     navigate('/login');
+    setShowLogoutConfirm(false);
   };
 
   const navItems = [
@@ -204,6 +213,25 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           </Button>
         </div>
       </header>
+
+      <Dialog open={showLogoutConfirm} onOpenChange={setShowLogoutConfirm}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>¿Cerrar sesión?</DialogTitle>
+            <DialogDescription>
+              Saldrás de tu cuenta actual y deberás ingresar de nuevo para continuar.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="gap-2 sm:gap-0">
+            <Button variant="outline" onClick={() => setShowLogoutConfirm(false)}>
+              Cancelar
+            </Button>
+            <Button variant="destructive" onClick={confirmLogout}>
+              Cerrar sesión
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <div className="flex flex-1 overflow-hidden relative">
         
