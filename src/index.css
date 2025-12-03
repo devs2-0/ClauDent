@@ -114,5 +114,7 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    /* Evita el efecto de rebote/sombra en el scroll en dispositivos táctiles */
+    overscroll-behavior: none;
   }
 }
