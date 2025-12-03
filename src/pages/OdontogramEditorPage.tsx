@@ -233,25 +233,25 @@ const OdontogramEditorPage: React.FC = () => {
 
     return (
       <div className="w-full overflow-x-auto pb-4">
-        <div className="min-w-max px-4 flex flex-col gap-8 items-center mx-auto">
+        <div className="min-w-max w-full px-2 sm:px-4 flex flex-col gap-6 sm:gap-8 items-center mx-auto">
             {/* Maxilar Superior */}
-            <div className="flex gap-4 sm:gap-8 relative">
+            <div className="flex gap-2 sm:gap-4 md:gap-6 xl:gap-8 relative flex-wrap md:flex-nowrap justify-center">
                 <div className="absolute left-1/2 top-0 bottom-0 w-px bg-border -translate-x-1/2"></div>
-                <div className="flex gap-1 sm:gap-2">
+                <div className="flex gap-1 sm:gap-1.5 md:gap-2 flex-wrap justify-center md:flex-nowrap">
                     {Q1.map(t => <Tooth key={t} number={t} />)}
                 </div>
-                <div className="flex gap-1 sm:gap-2">
+                <div className="flex gap-1 sm:gap-1.5 md:gap-2 flex-wrap justify-center md:flex-nowrap">
                     {Q2.map(t => <Tooth key={t} number={t} />)}
                 </div>
             </div>
 
             {/* Maxilar Inferior */}
-            <div className="flex gap-4 sm:gap-8 relative">
+            <div className="flex gap-2 sm:gap-4 md:gap-6 xl:gap-8 relative flex-wrap md:flex-nowrap justify-center">
                 <div className="absolute left-1/2 top-0 bottom-0 w-px bg-border -translate-x-1/2"></div>
-                <div className="flex gap-1 sm:gap-2">
+                <div className="flex gap-1 sm:gap-1.5 md:gap-2 flex-wrap justify-center md:flex-nowrap">
                     {Q4.map(t => <Tooth key={t} number={t} />)}
                 </div>
-                <div className="flex gap-1 sm:gap-2">
+                <div className="flex gap-1 sm:gap-1.5 md:gap-2 flex-wrap justify-center md:flex-nowrap">
                     {Q3.map(t => <Tooth key={t} number={t} />)}
                 </div>
             </div>
@@ -278,11 +278,11 @@ const OdontogramEditorPage: React.FC = () => {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="p-4 md:p-6 max-w-[1600px] mx-auto space-y-6"
+      className="p-4 md:p-6 max-w-[1400px] mx-auto space-y-6 w-full"
     >
       {/* HEADER MEJORADO */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-card p-4 rounded-xl border shadow-sm">
-        <div className="flex items-center gap-4 w-full sm:w-auto">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-card p-4 md:p-5 rounded-xl border shadow-sm w-full">
+        <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto">
             <Button variant="ghost" size="icon" onClick={() => navigate(`/pacientes/${patientId}`)}>
             <ArrowLeft className="h-5 w-5" />
             </Button>
@@ -306,7 +306,7 @@ const OdontogramEditorPage: React.FC = () => {
       </div>
 
       {/* MAIN CONTENT */}
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] xl:grid-cols-[2fr_1fr] gap-6 items-start">
         
         {/* COLUMNA IZQ: Gráfico */}
         <div className="xl:col-span-2 order-2 xl:order-1">
@@ -314,7 +314,7 @@ const OdontogramEditorPage: React.FC = () => {
             <CardHeader className="pb-2">
                 <CardTitle className="text-lg">Mapa Dental</CardTitle>
             </CardHeader>
-            <CardContent className="p-2 sm:p-6 bg-secondary/5 rounded-b-lg">
+            <CardContent className="p-2 sm:p-4 md:p-6 bg-secondary/5 rounded-b-lg">
               <OdontogramGrid tipo={odontogram?.tipo || 'adulto'} />
               <div className="flex items-center justify-center gap-2 mt-4 text-sm text-muted-foreground">
                  <Info className="h-4 w-4" />
