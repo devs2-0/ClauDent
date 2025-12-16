@@ -325,7 +325,7 @@ const OdontogramEditorPage: React.FC = () => {
         </div>
 
         {/* COLUMNA DER: Panel de Control */}
-        <div className="xl:col-span-1 order-1 xl:order-2 space-y-6 sticky top-4">
+        <div className="xl:col-span-1 order-1 xl:order-2 space-y-6 xl:sticky xl:top-4">
           
           <Card className={cn("border-2 transition-colors", selectedTooth ? "border-primary" : "border-border")}>
             <CardHeader className="bg-muted/30 py-3">
